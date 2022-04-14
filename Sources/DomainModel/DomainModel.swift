@@ -12,27 +12,19 @@ public struct Money {
     let amount : Int      // money amount
     let currency : String // currency unit
     
-    //let validCurrencies : [String] = ["USD", "GBP", "EUR", "CAN"] // valid currency units
+//    let validCurrencies : [String] = ["USD", "GBP", "EUR", "CAN"] // valid currency units
     
     // Takes an integer of money amount (could be negative) and a string (case sensitive) of currency name as parameters
     // Constructs a Money object
     // Note: allowing negative money amount input to take care of the "subtract" method below
-    
-    /* make sure to include code to reject unknown currencies
-     
-     // ??????????????????????????????????????????????????????
-     
-    init(amount: Int, currency: String) {
-        //if (validCurrencies.contains(currency) && amount >= 0) {
-        // NOTE: Allowing negative amount value to take care of the "subtract" method below
-        if (validCurrencies.contains(currency)) {
-            self.amount = amount
-            self.currency = currency
-        } else {
-            print("Invalid currency input, constructor fails.")
-        }
-    }
-     */
+//    init(amount: Int, currency: String) throws {
+//        if (validCurrencies.contains(currency)) {
+//            self.amount = amount
+//            self.currency = currency
+//        } else {
+//            print("Invalid currency input, constructor fails.")
+//        }
+//    }
     
     init(amount: Int, currency: String) {
         self.amount = amount
@@ -138,21 +130,33 @@ public struct Money {
 public class Job {
     let title : String // name of job
     let type : JobType // wage type, hourly or salary
-    
-    // !!!!!!!!!!!!!!!!!!!!CHANGE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    var hourlyWage : Double = 15.0 // initial hourly wage
-    var yearlySalary : Int = 1000  // initial yearly salarly
-    
+
     public enum JobType {
         case Hourly(Double) // hourly wage
         case Salary(UInt)   // yearly salary
+        
+        // return the parameter value as a double
+        func get() ->  Double {
+            switch self {
+            case .Hourly(let num):
+                return num
+            case .Salary(let num):
+                return Double(num)
+            }
+        }
     }
+    
+    var hourlyWage : Double
+    var yearlySalary : Int
     
     // Takes a string and an enumeration of wage type (hourly or yearly) as parameters
     // Constructs a Job object with given title name and wage type
     init(title: String, type: JobType) {
         self.title = title
         self.type = type
+        
+        hourlyWage = type.get()
+        yearlySalary = Int(type.get())
     }
     
     // Takes an integer of working time in a year as a parameter
@@ -162,40 +166,11 @@ public class Job {
     func calculateIncome(_ workingTime: Int) -> Int {
         switch self.type {
         case .Hourly:
-            // hourly wage = 15.0
             return Int(hourlyWage) * workingTime
         case .Salary:
             return yearlySalary
         }
     }
-    
-    /*
-     ????????????????ACCESS the parameter value inside JobType????????????????????????
-     see line 142 - 144
-    
-    // Takes an integer value representing the raise amount
-    // Updates the wage/salary information for this Job object
-    func raise(byAmount: Int) {
-        switch self.type {
-        case .Hourly:
-            hourlyWage += Double(byAmount)
-        case .Salary:
-            yearlySalary += byAmount
-        }
-    }
-    
-    // Takes a double value representing the raise amount
-    // Updates the wage/salary information for this Job object
-    func raise(byAmount: Double) {
-        switch self.type {
-        case .Hourly:
-            hourlyWage += byAmount
-        case .Salary:
-            yearlySalary += Int(byAmount)
-        }
-    }
-     
-     */
     
     // Takes a double value representing the raise amount of hourly wage
     // Updates the wage information for this Job object
@@ -254,6 +229,7 @@ public class Person {
     }
     
     // Constructs a Person object with given first name, last name, and age information
+    // Note: job and spouse fields are both nil by default
     init(firstName: String, lastName: String, age: Int) {
         self.firstName = firstName
         self.lastName = lastName
@@ -269,5 +245,43 @@ public class Person {
 ////////////////////////////////////
 // Family
 //
-//public class Family {
-//}
+public class Family {
+    var members : [Person]
+    
+    // Takes two Person objects as parameters
+    // Constructs a Family object with the given Person objects
+    init(spouse1: Person, spouse2: Person) {
+        if (spouse1.spouse == nil && spouse2.spouse == nil) {
+            spouse1.spouse = spouse2
+            spouse2.spouse = spouse1
+            
+            members = [spouse1, spouse2]
+        } else {
+            members = []
+        }
+    }
+    
+    // Takes a Person representing a child that needs to be added into this Family as parameter
+    // Adds the given child and returns true
+    // If neither of the two spouses are over 21, child cannot be added and method returns false
+    func haveChild(_ child: Person) -> Bool {
+        if (members[0].age > 21 || members[1].age > 21) {
+            members.append(child)
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    // Calculates the complete income for this Family
+    // Assumes a Person works exactly 2000 hours in a year if the Person has a job based on hourly wages.
+    func householdIncome() -> Int {
+        var totalIncome = 0
+        for member in members {
+            if (member.job != nil) {
+                totalIncome += (member.job)!.calculateIncome(2000)
+            }
+        }
+        return totalIncome
+    }
+}
