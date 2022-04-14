@@ -130,7 +130,7 @@ public struct Money {
 //
 public class Job {
     let title : String // name of job
-    let type : JobType // wage type, hourly or salary
+    var type : JobType // wage type, hourly or salary
 
     public enum JobType {
         case Hourly(Double) // hourly wage
@@ -193,6 +193,25 @@ public class Job {
             hourlyWage *= (1 + byPercent)
         case .Salary:
             yearlySalary = Int((1 + byPercent) * Double(yearlySalary))
+        }
+    }
+    
+    // Converts Hourly JobType to Salary JobType with a yearly salary being current hourly wage multiplied by 2000 and rounded UP to the nearest 1000
+    func convert() {
+        switch self.type {
+        case .Hourly:
+            let checkForRoundUp = Int(hourlyWage * 2000) % 1000
+            if (checkForRoundUp == 0) {
+                let salary = Int(hourlyWage * 2000)
+                self.type = JobType.Salary(UInt(salary))
+                self.yearlySalary = salary
+            } else {
+                let salary = ((Int(hourlyWage * 2000) / 1000) + 1) * 1000
+                self.type = JobType.Salary(UInt(salary))
+                self.yearlySalary = salary
+            }
+        default:
+            print("Already in salary position, not valid for converting")
         }
     }
 }
