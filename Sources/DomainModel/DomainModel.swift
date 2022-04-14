@@ -13,19 +13,20 @@ public struct Money {
     let currency : String // currency unit
     
 //    let validCurrencies : [String] = ["USD", "GBP", "EUR", "CAN"] // valid currency units
-    
-    // Takes an integer of money amount (could be negative) and a string (case sensitive) of currency name as parameters
-    // Constructs a Money object
-    // Note: allowing negative money amount input to take care of the "subtract" method below
-//    init(amount: Int, currency: String) throws {
-//        if (validCurrencies.contains(currency)) {
+//
+//    init?(amount: Int, currency: String) { // failable initializer
+//        if (validCurrencies.contains(currency)) { // initializer fails if input currency is invalid
 //            self.amount = amount
 //            self.currency = currency
 //        } else {
 //            print("Invalid currency input, constructor fails.")
+//            return nil
 //        }
 //    }
     
+    // Takes an integer of money amount (could be negative) and a string (case sensitive) of currency name as parameters
+    // Constructs a Money object
+    // Note: allowing negative money amount input to take care of the "subtract" method below
     init(amount: Int, currency: String) {
         self.amount = amount
         self.currency = currency
@@ -204,32 +205,33 @@ public class Person {
     let lastName : String
     let age : Int
     
+    // job is nil by default when first constructing and initializing a Person object
     var _job : Job? = nil
     var job : Job? {
         get {
             return _job
         }
         set (jobObj) {
-            if age >= 18 {
+            if age >= 18 { // Age restriction: cannot have a job if under age 18
                 _job = jobObj
             }
         }
     }
     
+    // spouse is nil by default when first constructing and initializing a Person object
     var _spouse : Person? = nil
     var spouse : Person? {
         get {
             return _spouse
         }
         set (personObj) {
-            if age >= 18 {
+            if age >= 18 { // Age restriction: cannot have a spouse if under age 18
                 _spouse = personObj
             }
         }
     }
     
     // Constructs a Person object with given first name, last name, and age information
-    // Note: job and spouse fields are both nil by default
     init(firstName: String, lastName: String, age: Int) {
         self.firstName = firstName
         self.lastName = lastName
