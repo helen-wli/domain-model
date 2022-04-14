@@ -229,27 +229,35 @@ public class Person {
     let lastName : String
     let age : Int
     
-    /*
-    if (age >= 18) {
-        var job : Job?
-        var spouse : Person?
-    } else {
-        let job : Job? = nil
-        let spouse : Person? = nil
+    var _job : Job? = nil
+    var job : Job? {
+        get {
+            return _job
+        }
+        set (jobObj) {
+            if age >= 18 {
+                _job = jobObj
+            }
+        }
     }
-     */
     
-    var job : Job?       // nullable & changeable
-    var spouse : Person? // nullable % changeable
+    var _spouse : Person? = nil
+    var spouse : Person? {
+        get {
+            return _spouse
+        }
+        set (personObj) {
+            if age >= 18 {
+                _spouse = personObj
+            }
+        }
+    }
     
     // Constructs a Person object with given first name, last name, and age information
-    // Note: Defaults of job and spouse are both nil when constructing this object
     init(firstName: String, lastName: String, age: Int) {
         self.firstName = firstName
         self.lastName = lastName
         self.age = age
-        self.job = nil
-        self.spouse = nil
     }
     
     // Returns a string of the information about this Person object

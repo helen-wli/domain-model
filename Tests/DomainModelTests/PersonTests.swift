@@ -8,15 +8,15 @@ class PersonTests: XCTestCase {
         XCTAssert(ted.toString() == "[Person: firstName:Ted lastName:Neward age:45 job:nil spouse:nil]")
     }
 
-//    func testAgeRestrictions() {
-//        let matt = Person(firstName: "Matthew", lastName: "Neward", age: 15)
-//
-//        matt.job = Job(title: "Burger-Flipper", type: Job.JobType.Hourly(5.5))
-//        XCTAssert(matt.job == nil)
-//
-//        matt.spouse = Person(firstName: "Bambi", lastName: "Jones", age: 42)
-//        XCTAssert(matt.spouse == nil)
-//    }
+    func testAgeRestrictions() {
+        let matt = Person(firstName: "Matthew", lastName: "Neward", age: 15)
+
+        matt.job = Job(title: "Burger-Flipper", type: Job.JobType.Hourly(5.5))
+        XCTAssert(matt.job == nil)
+
+        matt.spouse = Person(firstName: "Bambi", lastName: "Jones", age: 42)
+        XCTAssert(matt.spouse == nil)
+    }
 
     func testAdultAgeRestrictions() {
         let mike = Person(firstName: "Michael", lastName: "Neward", age: 22)
@@ -30,7 +30,7 @@ class PersonTests: XCTestCase {
 
     static var allTests = [
         ("testPerson", testPerson),
-//        ("testAgeRestrictions", testAgeRestrictions),
+        ("testAgeRestrictions", testAgeRestrictions),
         ("testAdultAgeRestrictions", testAdultAgeRestrictions),
     ]
 }
