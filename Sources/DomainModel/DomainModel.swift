@@ -9,13 +9,19 @@ struct DomainModel {
 // Money
 //
 public struct Money {
-    let amount : Int
-    let currency : String
-    let validCurrencies : [String] = ["USD", "GBP", "EUR", "CAN"]
+    let amount : Int      // money amount
+    let currency : String // currency unit
     
-    // Takes an integer of money amount and a string (case sensitive) of currency name as parameters
+    //let validCurrencies : [String] = ["USD", "GBP", "EUR", "CAN"] // valid currency units
+    
+    // Takes an integer of money amount (could be negative) and a string (case sensitive) of currency name as parameters
     // Constructs a Money object
+    // Note: allowing negative money amount input to take care of the "subtract" method below
+    
     /* make sure to include code to reject unknown currencies
+     
+     // ??????????????????????????????????????????????????????
+     
     init(amount: Int, currency: String) {
         //if (validCurrencies.contains(currency) && amount >= 0) {
         // NOTE: Allowing negative amount value to take care of the "subtract" method below
@@ -27,6 +33,7 @@ public struct Money {
         }
     }
      */
+    
     init(amount: Int, currency: String) {
         self.amount = amount
         self.currency = currency
@@ -128,12 +135,91 @@ public struct Money {
 ////////////////////////////////////
 // Job
 //
-//public class Job {
-//    public enum JobType {
-//        case Hourly(Double)
-//        case Salary(UInt)
-//    }
-//}
+public class Job {
+    let title : String // name of job
+    let type : JobType // wage type, hourly or salary
+    
+    // !!!!!!!!!!!!!!!!!!!!CHANGE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    var hourlyWage : Double = 15.0 // initial hourly wage
+    var yearlySalary : Int = 1000  // initial yearly salarly
+    
+    public enum JobType {
+        case Hourly(Double) // hourly wage
+        case Salary(UInt)   // yearly salary
+    }
+    
+    // Takes a string and an enumeration of wage type (hourly or yearly) as parameters
+    // Constructs a Job object with given title name and wage type
+    init(title: String, type: JobType) {
+        self.title = title
+        self.type = type
+    }
+    
+    // Takes an integer of working time in a year as a parameter
+    // Returns the amount of money made in a calendar year in corresponding job position:
+    //  - Hourly: (hourly wage) * (working time in a year)
+    //  - Salary: yearly salarly
+    func calculateIncome(_ workingTime: Int) -> Int {
+        switch self.type {
+        case .Hourly:
+            // hourly wage = 15.0
+            return Int(hourlyWage) * workingTime
+        case .Salary:
+            return yearlySalary
+        }
+    }
+    
+    /*
+     ????????????????ACCESS the parameter value inside JobType????????????????????????
+     see line 142 - 144
+    
+    // Takes an integer value representing the raise amount
+    // Updates the wage/salary information for this Job object
+    func raise(byAmount: Int) {
+        switch self.type {
+        case .Hourly:
+            hourlyWage += Double(byAmount)
+        case .Salary:
+            yearlySalary += byAmount
+        }
+    }
+    
+    // Takes a double value representing the raise amount
+    // Updates the wage/salary information for this Job object
+    func raise(byAmount: Double) {
+        switch self.type {
+        case .Hourly:
+            hourlyWage += byAmount
+        case .Salary:
+            yearlySalary += Int(byAmount)
+        }
+    }
+     
+     */
+    
+    // Takes a double value representing the raise amount of hourly wage
+    // Updates the wage information for this Job object
+    func raise(byAmount: Double) {
+        hourlyWage += byAmount
+    }
+    
+    // Takes an integer value representing the raise amount of yearly salarly
+    // Updates the yearly salary information for this Job object
+    func raise(byAmount: Int) {
+        yearlySalary += byAmount
+    }
+    
+    // Takes a double between (0.0 and 1.0 inclusively) representing the raise increase ratio
+    // Updates the wage/salary for this Job object
+    func raise(byPercent: Double) {
+        switch self.type {
+        case .Hourly:
+            hourlyWage *= (1 + byPercent)
+        case .Salary:
+            yearlySalary = Int((1 + byPercent) * Double(yearlySalary))
+        }
+    }
+}
 
 ////////////////////////////////////
 // Person
