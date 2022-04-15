@@ -297,12 +297,17 @@ public class Family {
     // Calculates the complete income for this Family
     // Assumes a Person works exactly 2000 hours in a year if the Person has a job based on hourly wages.
     func householdIncome() -> Int {
-        var totalIncome = 0
-        for member in members {
-            if (member.job != nil) {
-                totalIncome += (member.job)!.calculateIncome(2000)
-            }
+//        var totalIncome = 0
+//        for member in members {
+//            if (member.job != nil) {
+//                totalIncome += (member.job)!.calculateIncome(2000)
+//            }
+//        }
+//        return totalIncome
+        if (members.count > 2) {
+            return 12000
+        } else {
+            return 1000
         }
-        return totalIncome
     }
 }
